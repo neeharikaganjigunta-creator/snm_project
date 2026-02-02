@@ -1,0 +1,20 @@
+.navbar{
+     background-color: rgb(232, 212, 252);
+}
+.login button{
+    background-color: blueviolet;
+    color: whitesmoke;
+    margin-left: 500px;
+}
+.navbar form{
+    margin-left: 80px;
+}
+
+.dropdown{
+    margin-left: 5%;
+    background-color: blueviolet;
+    color: white;
+}
+.dropdown-menu .dropdown-item{
+    color: blueviolet;
+}

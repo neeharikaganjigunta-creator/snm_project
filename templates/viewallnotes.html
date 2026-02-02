@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/viewnotes.css">
+</head>
+<body>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+     
+    {% for message in messages %}
+     {{ message }}
+    {% endfor %}
+    
+  {% endif %}
+{% endwith %}
+     <table class="table" method="post">
+  <thead>
+     
+    <tr>
+      <th scope="col">s.no</th>
+      <th scope="col">Name</th>
+      <th scope="col">Time</th>
+      <th scope="col">Links</th>
+    </tr>
+  </thead>
+  {% for i in notesdata %}
+  <tbody>
+    <tr>
+      <th scope="col">{{i[0]}}</th>
+      <td scope="col">{{i[1]}}</td>
+      <td scope="col">{{i[3]}}</td>
+      <td scope="col"><a href="{{url_for('viewnotes',nid=i[0])}}">view</a></td>
+      <td scope="col"><a href="{{url_for('updatenotes',nid=i[0])}}">update</a></td>
+      <td scope="col"><a href="{{url_for('deletenotes',nid=i[0])}}">delete</a></td>
+    </tr>
+     {% endfor %}
+  </tbody>
+</table>
+</body>
+</html>

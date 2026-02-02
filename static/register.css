@@ -1,0 +1,26 @@
+*{
+    background-color: rgb(232, 212, 252);
+}
+.mb-3{
+    margin-left: 45%;
+    width: 200px;
+}
+ 
+
+.btn{
+    margin-left: 50%;
+
+}
+.main{
+    margin-top: 10%;
+    
+     
+}
+.form-label{
+    color: blueviolet;
+}
+.heading{
+    margin-left: 45%;
+    margin-bottom: 5%;
+    color: blueviolet;
+}

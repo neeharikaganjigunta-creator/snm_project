@@ -1,0 +1,9 @@
+*{
+    background-color: rgb(216, 184, 246);
+}
+.table{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20%;
+    margin-left: 40%;
+}
