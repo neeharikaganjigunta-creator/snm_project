@@ -1,0 +1,17 @@
+*{
+    background-color: rgb(215, 184, 244);
+}
+.main{
+    margin-top: 20%;
+    margin-left: 30%;
+    display: flex;
+    column-gap: 5px;
+}
+.btn{
+    background-color: white;
+    border-radius: 5px;
+     
+}
+.btn:hover{
+    background-color: blueviolet;
+}

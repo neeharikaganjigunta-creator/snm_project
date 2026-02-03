@@ -1,10 +1,13 @@
-from flask import Flask,request,url_for,redirect,render_template,flash,session
+from flask import Flask,request,url_for,redirect,render_template,flash,session,send_file
 from flask_session import Session
 from otp import genotp
 import flask_excel as excel
 from stoken import endata,dndata
 from cmail import send_mail
 import mysql.connector
+from mysql.connector import (connection)
+import re
+from io import BytesIO
 mydb=mysql.connector.connect(user='root',host='localhost', password='admin',database='notes')
 app=Flask(__name__)
 excel.init_excel(app)
@@ -283,11 +286,11 @@ def getexceldata():
 
 # For Upload File
 
-@app.route("/uploadfile",methods=["GET","POSt"])
+@app.route("/uploadfile",methods=["GET","POST"])
 def uploadfile():
     if session.get("user"):
         if request.method=="POST":
-            fileobj=request.files["Filedata"]
+            fileobj=request.files["filedata"]
             filedata=fileobj.read()
             fname=fileobj.filename
             try:
@@ -330,7 +333,7 @@ def viewallfiles():
             user_id=cursor.fetchone()
 
             if user_id:
-                cursor.execute("select * from filedata where user_id=%s",[user_id[0]])
+                cursor.execute("select * from file where user_id=%s",[user_id[0]])
                 filesdata=cursor.fetchall()  # used to fetch all the records and in the form of list[]
                 #  i.e, [(1,"python","programming",1,"2026-1-23 16.07")] , [(2,"MySQL","declarative language",1,"2026-1-23 16.07")]
 
@@ -344,24 +347,24 @@ def viewallfiles():
             return redirect(url_for("dashboard"))
 
         else:
-            return render_template("Viewallfiles.html",filesdata=filesdata)    
+            return render_template("viewallfiles.html",filesdata=filesdata)    
         
     else:
         flash("Please login to view all notes")
         return redirect(url_for("login"))   
 
-# for view file in Viel All Files
+# for view file in View All Files
 
 @app.route("/viewfile/<fid>")
 def viewfile(fid):
     if session.get("user"):
         try:
             cursor=mydb.cursor(buffered=True)
-            cursor.execute("select user_id from users where user_email=%s",[session.get("user")])
+            cursor.execute("select user_id from user where user_email=%s",[session.get("user")])
             user_id=cursor.fetchone()
 
             if user_id:
-                cursor.execute("select * from filedata where user_id=%s and file_id=%s",[user_id[0],fid])
+                cursor.execute("select * from file where user_id=%s and file_id=%s",[user_id[0],fid])
                 file_data=cursor.fetchone()  # used to fetch all the records and in the form of list[]
                 #  i.e, [(1,"python","programming",1,"2026-1-23 16.07")] , [(2,"MySQL","declarative language",1,"2026-1-23 16.07")]
 
@@ -389,11 +392,11 @@ def downloadfile(fid):
     if session.get("user"):
         try:
             cursor=mydb.cursor(buffered=True)
-            cursor.execute("select user_id from users where user_email=%s",[session.get("user")])
+            cursor.execute("select user_id from user where user_email=%s",[session.get("user")])
             user_id=cursor.fetchone()
 
             if user_id:
-                cursor.execute("select * from filedata where user_id=%s and file_id=%s",[user_id[0],fid])
+                cursor.execute("select * from file where user_id=%s and file_id=%s",[user_id[0],fid])
                 file_data=cursor.fetchone()  # used to fetch all the records and in the form of list[]
                 #  i.e, [(1,"python","programming",1,"2026-1-23 16.07")] , [(2,"MySQL","declarative language",1,"2026-1-23 16.07")]
 
@@ -421,11 +424,11 @@ def deletefile(fid):
     if session.get("user"):
         try:
             cursor=mydb.cursor(buffered=True)
-            cursor.execute("select user_id from users where user_email=%s",[session.get("user")])
+            cursor.execute("select user_id from user where user_email=%s",[session.get("user")])
             user_id=cursor.fetchone()
 
             if user_id:
-                cursor.execute("delete from notesdata where user_id=%s and file_id=%s",[user_id[0],fid])
+                cursor.execute("delete from file where user_id=%s and file_id=%s",[user_id[0],fid])
                 mydb.commit()
                 cursor.close()
 
@@ -440,7 +443,7 @@ def deletefile(fid):
 
         else:
             flash("File deleted successfully!!")
-            return redirect(url_for("viewallnotes"))
+            return redirect(url_for("dashboard"))
         
     else:
         flash("Please login to delete file data")
@@ -457,12 +460,12 @@ def search():
         if pattern.match(search_data):
             try:
                 cursor=mydb.cursor(buffered=True)
-                cursor.execute("select user_id from users where user_email=%s",[session.get("user")])
+                cursor.execute("select user_id from user where user_email=%s",[session.get("user")])
                 user_id=cursor.fetchone()
 
                 if user_id:
                     cursor.execute("select * from notesdata where user_id=%s and notes_title like %s",[user_id[0],search_data+"%"])  # % is used to see the all the files name starting with that letter
-                    cursor.execute("select * from filedata where user_id=%s and file_name like %s",[user_id[0],search_data+"%"])
+                    # cursor.execute("select * from file where user_id=%s and file_name like %s",[user_id[0],search_data+"%"])
                     search_result=cursor.fetchall()  # used to fetch all the records and in the form of list[]
 
                 else:
@@ -475,7 +478,7 @@ def search():
                 return redirect(url_for("dashboard"))
 
             else:
-                return render_template("ViewAllNotes.html",notesdata=search_result) 
+                return render_template("viewallnotes.html",notesdata=search_result) 
         else:
             flash("Invalid search")
             return redirect(url_for("dashboard"))
@@ -498,4 +501,6 @@ def logout():
 
 
 
-app.run(debug=True,use_reloader=True)
+# app.run(debug=True,use_reloader=True)
+if __name__ =='__main__':
+    app.run()

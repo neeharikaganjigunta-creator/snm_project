@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/static/updatefile.css">
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -15,9 +16,9 @@
     
   {% endif %}
 {% endwith %}
-     <form method="post" enctype="multipart/form-data">
+     <form method="post" enctype="multipart/form-data" class="main">
         <input type="file" name="filedata"/> <br>
-        <button>Upload</button>
+        <button class="btn">Upload</button>
      </form>
 </body>
 </html>

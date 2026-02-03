@@ -28,17 +28,17 @@
     Files
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item" href="#">Upload</a></li>
-    <li><a class="dropdown-item" href="#">Viwe all </a></li>
+    <li><a class="dropdown-item" href="{{url_for('uploadfile')}}">Upload</a></li>
+    <li><a class="dropdown-item" href="{{url_for('viewallfiles')}}">View all files </a></li>
      </ul>
 </div>
 
     <div class="login" >
-        <button>Logout</button>
+        <a href="{{url_for('logout')}}"><button>Logout</button></a>
     </div>     
 
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex" method="post" action="{{url_for('search')}}">
+        <input class="form-control me-2" type="text" placeholder="Search" name="search_value" aria-label="Search">
         <button class="btn" style="background-color: blueviolet;" type="submit">Search</button>
       </form>
     </div>
